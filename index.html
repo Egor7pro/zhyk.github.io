@@ -1,69 +1,187 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Это увидят в выдаче (заголовок вкладки и строка в поиске) -->
-    <title>Егор — обо мне и моих проектах</title>
-    
-    <!-- Краткое описание, которое часто показывают под ссылкой в поиске -->
-    <meta name="description" content="Первый сайт Егора: рассказываю о себе, своих увлечениях и первых шагах в создании сайтов.">
-    
-    <!-- Чтобы поисковики точно знали, что страница для людей, а не для спама -->
-    <meta name="robots" content="index, follow">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заметки</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f4f5f7;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px;
+  }
+  .app {
+    width: 100%;
+    max-width: 500px;
+  }
+  h1 {
+    font-size: 26px;
+    color: #222;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .add {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .add input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+  }
+  .add input:focus { border-color: #5b7cfa; }
+  .add button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #5b7cfa;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .add button:hover { background: #4565e0; }
+  .note {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.06);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .note .txt {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .note .txt[contenteditable="true"] {
+    outline: 2px solid #5b7cfa;
+    border-radius: 6px;
+    padding: 2px 6px;
+  }
+  .note .date {
+    font-size: 11px;
+    color: #999;
+    white-space: nowrap;
+  }
+  .note .del {
+    border: none;
+    background: none;
+    font-size: 18px;
+    color: #c33;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .note .del:hover { color: #e00; }
+  .empty {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>📝 Заметки</h1>
 
-    <style>
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-        background-color: #f9f9f9;
-        color: #333;
-      }
-      .container {
-        max-width: 700px;
-        margin: 40px auto;
-        padding: 20px;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-      h1 {
-        color: #2c3e50;
-      }
-      img {
-        max-width: 100%;
-        border-radius: 8px;
-        display: block;
-        margin: 20px 0;
-      }
-      a {
-        color: #3498db;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Привет, я Егор</h1>
-      <p>Это мой первый сайт. Увлекаюсь созданием сайтов.</p>
+  <div class="add">
+    <input id="input" type="text" placeholder="Новая заметка...">
+    <button id="btn">Добавить</button>
+  </div>
 
-      <section>
-        <h2>Мои достижения</h2>
-        <p>Создание первого сайта.</p>
-      </section>
+  <div id="list"></div>
+  <p class="empty" id="empty">Пока пусто. Добавь первую заметку!</p>
+</div>
 
-      <!-- Блок контактов помогает и людям, и поисковикам понять, что это личный сайт -->
-      <section>
-        <h2>Где меня найти</h2>
-        <p>
-          Telegram: <a href="https://t.me/Zhyk_95">Zhychara</a><br>
-        </p>
-      </section>
-    </div>
-  </body>
+<script>
+const input = document.getElementById('input');
+const btn = document.getElementById('btn');
+const list = document.getElementById('list');
+const empty = document.getElementById('empty');
+
+// Загружаем заметки из памяти браузера (или пустой список)
+let notes = JSON.parse(localStorage.getItem('notes') || '[]');
+
+function save() {
+  localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+function render() {
+  list.innerHTML = '';
+  empty.style.display = notes.length ? 'none' : 'block';
+
+  notes.forEach((note, i) => {
+    const div = document.createElement('div');
+    div.className = 'note';
+
+    const txt = document.createElement('div');
+    txt.className = 'txt';
+    txt.textContent = note.text;
+    // Редактирование по двойному клику
+    txt.addEventListener('dblclick', () => {
+      txt.contentEditable = 'true';
+      txt.focus();
+    });
+    txt.addEventListener('blur', () => {
+      txt.contentEditable = 'false';
+      const newText = txt.textContent.trim();
+      if (newText) {
+        note.text = newText;
+        save();
+      } else {
+        render(); // пустую не сохраняем
+      }
+    });
+
+    const date = document.createElement('span');
+    date.className = 'date';
+    date.textContent = note.date;
+
+    const del = document.createElement('button');
+    del.className = 'del';
+    del.textContent = '✕';
+    del.title = 'Удалить';
+    del.addEventListener('click', () => {
+      notes.splice(i, 1);
+      save();
+      render();
+    });
+
+    div.append(txt, date, del);
+    list.append(div);
+  });
+}
+
+function addNote() {
+  const text = input.value.trim();
+  if (!text) return;
+  const now = new Date();
+  const date = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+  notes.unshift({ text, date });
+  save();
+  render();
+  input.value = '';
+  input.focus();
+}
+
+btn.addEventListener('click', addNote);
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') addNote();
+});
+
+render();
+</script>
+</body>
 </html>
