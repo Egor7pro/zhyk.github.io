@@ -45,22 +45,112 @@
   }
   .empty { text-align: center; color: #999; font-size: 14px; margin-top: 40px; }
 
-  /* Скрытая страница со статьёй */
-  #page {
+  /* Скрытые страницы */
+  .page {
     display: none;
     background: #fff; border-radius: 12px;
     padding: 24px 20px;
     box-shadow: 0 2px 6px rgba(0,0,0,.08);
   }
-  #page h2 { font-size: 22px; margin-bottom: 12px; }
-  #page p { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 12px; }
-  #page .back {
+  .page h2 { font-size: 22px; margin-bottom: 12px; }
+  .page p { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 12px; }
+  .back {
     display: inline-block; margin-bottom: 16px;
     padding: 8px 14px; border-radius: 8px;
     background: #eee; color: #333;
     font-size: 14px; font-weight: 600;
     cursor: pointer; border: none;
   }
+
+  /* ===== ZhykWin ===== */
+  #zhykwin {
+    background: #12121e;
+    color: #eee;
+    padding: 24px 20px 90px; /* отступ снизу под навигацию */
+  }
+  #zhykwin h2 { color: #ffd54a; }
+  #zhykwin .disclaimer {
+    font-size: 12px; color: #9a9ab0;
+    border: 1px solid #2c2c44; border-radius: 8px;
+    padding: 8px 10px; margin-bottom: 16px;
+  }
+  #zhykwin .balance {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #1d1d30; border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 16px;
+  }
+  #zhykwin .balance b { color: #ffd54a; font-size: 18px; }
+
+  /* Тапалка */
+  #zhykwin .coin-zone { text-align: center; margin-bottom: 20px; }
+  #zhykwin .coin {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 6px solid #ffd54a;
+    background: radial-gradient(circle at 35% 30%, #ffe98a, #f0b90b);
+    color: #12121e;
+    font-size: 20px; font-weight: 800;
+    cursor: pointer;
+    user-select: none; -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 0 30px rgba(255,213,74,.35);
+    transition: transform .08s;
+  }
+  #zhykwin .coin:active { transform: scale(.9); }
+  #zhykwin .coin-hint { font-size: 12px; color: #9a9ab0; margin-top: 10px; }
+  #zhykwin .per-tap { font-size: 13px; color: #ffd54a; margin-top: 4px; }
+
+  #zhykwin label { font-size: 13px; color: #9a9ab0; display: block; margin-bottom: 6px; }
+  #zhykwin .bet {
+    width: 100%; padding: 12px; border-radius: 10px;
+    border: 1px solid #2c2c44; background: #1d1d30; color: #eee;
+    font-size: 16px; margin-bottom: 12px; outline: none;
+  }
+  #zhykwin .choices { display: flex; gap: 10px; margin-bottom: 14px; }
+  #zhykwin .choice {
+    flex: 1; padding: 14px 0; border-radius: 10px;
+    border: 2px solid #2c2c44; background: #1d1d30; color: #eee;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  #zhykwin .choice.active { border-color: #ffd54a; color: #ffd54a; }
+  #zhykwin .play {
+    width: 100%; padding: 14px 0; border: none; border-radius: 10px;
+    background: #ffd54a; color: #12121e;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+  }
+  #zhykwin .result {
+    text-align: center; font-size: 16px; font-weight: 600;
+    margin-top: 14px; min-height: 22px;
+  }
+  #zhykwin .win { color: #5dd97c; }
+  #zhykwin .lose { color: #ff6b6b; }
+
+  /* Разделы внутри ZhykWin */
+  #zhykwin .tab { display: none; }
+  #zhykwin .tab.active { display: block; }
+  #zhykwin .tab h3 {
+    font-size: 18px; color: #ffd54a; margin-bottom: 12px; text-align: center;
+  }
+
+  /* Нижняя навигация */
+  #zhykNav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 500px; margin: 0 auto;
+    background: #1d1d30;
+    border-top: 1px solid #2c2c44;
+    padding: 8px 0 10px;
+    z-index: 10;
+  }
+  #zhykNav .nav-items { display: flex; }
+  #zhykNav button {
+    flex: 1; background: none; border: none;
+    color: #9a9ab0; font-size: 12px; font-weight: 600;
+    cursor: pointer; padding: 6px 0;
+  }
+  #zhykNav button .ico { display: block; font-size: 20px; margin-bottom: 2px; }
+  #zhykNav button.active { color: #ffd54a; }
 </style>
 </head>
 <body>
@@ -79,18 +169,95 @@
     <p class="empty" id="empty">Пока пусто. Добавь первую заметку!</p>
   </div>
 
-  <!-- Секретная страница про подтягивания -->
-  <div id="page">
-    <button class="back" id="backBtn">← Назад</button>
+  <!-- Страница про подтягивания -->
+  <div class="page" id="pullups">
+    <button class="back">← Назад</button>
     <h2>Как правильно подтягиваться</h2>
     <p><b>Хват.</b> Руки чуть шире плеч, ладони от себя. Большой палец обхватывает перекладину снизу — так безопаснее для кистей.</p>
-    <p><b>Исходное положение.</b> Повисни на прямых руках, плечи слегка опусти (не «втягивай» их в уши), лопатки сведи назад.</p>
+    <p><b>Исходное положение.</b> Повисни на прямых руках, плечи слегка опусти, лопатки сведи назад.</p>
     <p><b>Подъём.</b> Тяни тело вверх за счёт мышц спины и рук, а не рывком. Подбородок оказывается над перекладиной.</p>
-    <p><b>Опускание.</b> Медленно, на 2–3 секунды. Медленная фаза опускания даёт больше пользы, чем быстрый рывок вверх.</p>
+    <p><b>Опускание.</b> Медленно, на 2–3 секунды. Медленная фаза даёт больше пользы, чем рывок вверх.</p>
     <p><b>Дыхание.</b> Вдох на опускании, выдох на подъёме.</p>
     <p><b>Как начать с нуля.</b> Если пока не получается — делай «негативы»: запрыгни на перекладину и медленно опускайся. 3 подхода по 5 раз — отличный старт.</p>
   </div>
 
+  <!-- ZhykWin Демо -->
+  <div class="page" id="zhykwin">
+    <button class="back">← Назад</button>
+    <h2>⚡ ZhykWin — демо</h2>
+    <p class="disclaimer">Виртуальные монеты Zhyk Coin. Их нельзя пополнить, вывести или обменять на деньги. Только развлечение.</p>
+
+    <div class="balance">
+      <span>Баланс: <b id="balance">0</b> 🪙</span>
+    </div>
+
+    <!-- РАЗДЕЛ: КАЗИНО -->
+    <div class="tab active" id="tab-casino">
+      <h3>🎰 Казино</h3>
+
+      <div class="coin-zone">
+        <button class="coin" id="coin">ZHYK<br>COIN</button>
+        <p class="per-tap">+1 за тап</p>
+        <p class="coin-hint">Тапай монету, чтобы заработать монеты для ставок</p>
+      </div>
+
+      <label for="betInput">Ставка (монет):</label>
+      <input class="bet" id="betInput" type="number" min="1" value="100">
+
+      <div class="choices">
+        <button class="choice active" data-side="орёл">Орёл ×1,85</button>
+        <button class="choice" data-side="решка">Решка ×1,85</button>
+      </div>
+
+      <button class="play" id="playBtn">Бросить монету</button>
+      <p class="result" id="result"></p>
+    </div>
+
+    <!-- РАЗДЕЛ: СПОРТ -->
+    <div class="tab" id="tab-sport">
+      <h3>⚽ Спорт</h3>
+
+      <div class="balance" style="margin-bottom:12px">
+        <span id="matchLine">Матч генерируется...</span>
+      </div>
+
+      <div class="choices">
+        <button class="choice" id="teamA">—</button>
+        <button class="choice" id="teamB">—</button>
+      </div>
+
+      <label for="sportBet">Ставка (монет):</label>
+      <input class="bet" id="sportBet" type="number" min="1" value="100">
+
+      <button class="play" id="sportPlay">Поставить</button>
+      <p class="result" id="sportResult"></p>
+
+      <button class="play" id="newMatch" style="margin-top:14px; background:#2c2c44; color:#eee">Другой матч</button>
+    </div>
+
+    <!-- РАЗДЕЛ: РОЗЫГРЫШ -->
+    <div class="tab" id="tab-rozig">
+      <h3>🎁 Розыгрыш</h3>
+      <p style="color:#9a9ab0; font-size:14px; text-align:center; margin-bottom:14px">
+        Купи билет за 50 🪙 и проверь удачу:<br>
+        50% — мимо, 40% — ×2, 8% — ×5, 2% — ×10
+      </p>
+
+      <button class="play" id="ticketBtn">Купить билет — 50 🪙</button>
+      <p class="result" id="rozigResult"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Нижняя навигация ZhykWin -->
+<div id="zhykNav">
+  <div class="nav-items">
+    <button class="active" data-tab="tab-casino"><span class="ico">🎰</span>Казино</button>
+    <button data-tab="tab-sport"><span class="ico">⚽</span>Спорт</button>
+    <button data-tab="tab-rozig"><span class="ico">🎁</span>Розыгрыш</button>
+  </div>
 </div>
 
 <script>
@@ -99,11 +266,12 @@ const btn = document.getElementById('btn');
 const list = document.getElementById('list');
 const empty = document.getElementById('empty');
 const main = document.getElementById('main');
-const page = document.getElementById('page');
+const zhykNav = document.getElementById('zhykNav');
 
-// Кодовые слова и их страницы
+// Кодовые слова -> id страницы
 const secretPages = {
-  'venture95': 'pullups'
+  'venture95': 'pullups',
+  'zhykwin бетка': 'zhykwin'
 };
 
 let notes = JSON.parse(localStorage.getItem('notes') || '[]');
@@ -144,9 +312,8 @@ function render() {
 
 function addNote() {
   const text = input.value.trim();
+  const key = text.toLowerCase().replace(/\s+/g, ' ');
 
-  // Проверяем кодовое слово
-  const key = text.toLowerCase();
   if (secretPages[key]) {
     openPage(secretPages[key]);
     input.value = '';
@@ -165,27 +332,197 @@ function addNote() {
   input.focus();
 }
 
-function openPage(name) {
-  if (name === 'pullups') {
-    main.style.display = 'none';
-    page.style.display = 'block';
-    window.scrollTo(0, 0);
-  }
-}
-
-function goBack() {
-  page.style.display = 'none';
-  main.style.display = 'block';
+function openPage(id) {
+  main.style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+  // Показываем нижнюю навигацию только на странице ZhykWin
+  zhykNav.style.display = (id === 'zhykwin') ? 'block' : 'none';
   window.scrollTo(0, 0);
 }
+
+// Кнопки "Назад" на всех скрытых страницах
+document.querySelectorAll('.back').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    zhykNav.style.display = 'none';
+    main.style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+});
+
+// ===== ZhykWin: общий баланс =====
+const COEF = 1.85;
+const PER_TAP = 1;
+const TICKET_PRICE = 50;
+
+let balance = parseInt(localStorage.getItem('zhyk_balance') || '0', 10);
+let choice = 'орёл';
+
+const balanceEl = document.getElementById('balance');
+
+function updateBalance() {
+  balanceEl.textContent = balance;
+  localStorage.setItem('zhyk_balance', balance);
+}
+
+// ===== Нижняя навигация (переключение разделов) =====
+document.querySelectorAll('#zhykNav button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#zhykNav button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('#zhykwin .tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(b.dataset.tab).classList.add('active');
+  });
+});
+
+// ===== КАЗИНО =====
+const betInput = document.getElementById('betInput');
+const resultEl = document.getElementById('result');
+const coinEl = document.getElementById('coin');
+
+coinEl.addEventListener('click', () => {
+  balance += PER_TAP;
+  updateBalance();
+});
+
+document.querySelectorAll('#tab-casino .choice').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('#tab-casino .choice').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    choice = c.dataset.side;
+  });
+});
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  const bet = parseInt(betInput.value, 10);
+  if (!bet || bet < 1) { resultEl.textContent = 'Введи ставку от 1 монеты'; resultEl.className = 'result'; return; }
+  if (balance === 0) { resultEl.textContent = 'Сначала натапай монеты!'; resultEl.className = 'result'; return; }
+  if (bet > balance) { resultEl.textContent = 'Не хватает монет — натапай ещё!'; resultEl.className = 'result lose'; return; }
+
+  const flip = Math.random() < 0.5 ? 'орёл' : 'решка';
+  const winSum = Math.floor(bet * COEF);
+
+  if (flip === choice) {
+    balance += winSum - bet;
+    resultEl.textContent = `Выпал ${flip} — выплата ${winSum} 🪙 (×1,85)`;
+    resultEl.className = 'result win';
+  } else {
+    balance -= bet;
+    resultEl.textContent = `Выпала ${flip} — ставка проиграна`;
+    resultEl.className = 'result lose';
+  }
+  updateBalance();
+});
+
+// ===== СПОРТ =====
+const teams = [
+  { n: 'Зенит', c: 1.6 }, { n: 'Спартак', c: 2.4 },
+  { n: 'Реал Мадрид', c: 1.5 }, { n: 'Барселона', c: 2.6 },
+  { n: 'Бавария', c: 1.7 }, { n: 'Дортмунд', c: 2.2 },
+  { n: 'Манчестер Сити', c: 1.55 }, { n: 'Ливерпуль', c: 2.5 },
+  { n: 'ПСЖ', c: 1.8 }, { n: 'Интер', c: 2.0 }
+];
+
+let teamA = null, teamB = null, sportPick = null;
+const matchLine = document.getElementById('matchLine');
+const teamAEl = document.getElementById('teamA');
+const teamBEl = document.getElementById('teamB');
+const sportResult = document.getElementById('sportResult');
+const sportBet = document.getElementById('sportBet');
+
+function newMatch() {
+  const shuffled = [...teams].sort(() => Math.random() - 0.5);
+  teamA = shuffled[0];
+  teamB = shuffled[1];
+  sportPick = null;
+  sportResult.textContent = '';
+  sportResult.className = 'result';
+
+  teamAEl.textContent = `${teamA.n} ×${teamA.c.toFixed(2)}`;
+  teamBEl.textContent = `${teamB.n} ×${teamB.c.toFixed(2)}`;
+  teamAEl.classList.remove('active');
+  teamBEl.classList.remove('active');
+  matchLine.textContent = '⚽ Демо-матч (только для игры)';
+}
+
+teamAEl.addEventListener('click', () => {
+  sportPick = 'A';
+  teamAEl.classList.add('active');
+  teamBEl.classList.remove('active');
+});
+teamBEl.addEventListener('click', () => {
+  sportPick = 'B';
+  teamBEl.classList.add('active');
+  teamAEl.classList.remove('active');
+});
+
+document.getElementById('sportPlay').addEventListener('click', () => {
+  const bet = parseInt(sportBet.value, 10);
+  if (!sportPick) { sportResult.textContent = 'Выбери команду!'; sportResult.className = 'result'; return; }
+  if (!bet || bet < 1) { sportResult.textContent = 'Введи ставку от 1 монеты'; sportResult.className = 'result'; return; }
+  if (bet > balance) { sportResult.textContent = 'Не хватает монет — натапай ещё!'; sportResult.className = 'result lose'; return; }
+
+  const pick = sportPick === 'A' ? teamA : teamB;
+  // Шанс победы команды пропорционален 1/коэффициент — так честнее
+  const chanceA = (1 / teamA.c) / (1 / teamA.c + 1 / teamB.c);
+  const winner = Math.random() < chanceA ? 'A' : 'B';
+
+  if (winner === sportPick) {
+    const winSum = Math.floor(bet * pick.c);
+    balance += winSum - bet;
+    sportResult.textContent = `Победил ${pick.n} — выплата ${winSum} 🪙`;
+    sportResult.className = 'result win';
+  } else {
+    const other = winner === 'A' ? teamA : teamB;
+    balance -= bet;
+    sportResult.textContent = `Победил ${other.n} — ставка проиграна`;
+    sportResult.className = 'result lose';
+  }
+  updateBalance();
+});
+
+document.getElementById('newMatch').addEventListener('click', newMatch);
+newMatch();
+
+// ===== РОЗЫГРЫШ =====
+const ticketBtn = document.getElementById('ticketBtn');
+const rozigResult = document.getElementById('rozigResult');
+
+ticketBtn.addEventListener('click', () => {
+  if (balance < TICKET_PRICE) {
+    rozigResult.textContent = 'Не хватает монет на билет (50 🪙) — натапай ещё!';
+    rozigResult.className = 'result lose';
+    return;
+  }
+  balance -= TICKET_PRICE;
+
+  const roll = Math.random();
+  let prize;
+  if (roll < 0.50)      prize = 0;
+  else if (roll < 0.90) prize = TICKET_PRICE * 2;   // ×2
+  else if (roll < 0.98) prize = TICKET_PRICE * 5;   // ×5
+  else                  prize = TICKET_PRICE * 10;  // ×10
+
+  balance += prize;
+  updateBalance();
+
+  if (prize === 0) {
+    rozigResult.textContent = 'Билет пустой 🎫 Попробуй ещё!';
+    rozigResult.className = 'result lose';
+  } else {
+    rozigResult.textContent = `Поздравляем! Выигрыш: ${prize} 🪙`;
+    rozigResult.className = 'result win';
+  }
+});
+// =======================
 
 btn.addEventListener('click', addNote);
 input.addEventListener('keydown', e => {
   if (e.key === 'Enter') addNote();
 });
-document.getElementById('backBtn').addEventListener('click', goBack);
 
 render();
+updateBalance();
 </script>
 </body>
 </html>
