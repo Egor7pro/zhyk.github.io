@@ -14,95 +14,83 @@
     justify-content: center;
     padding: 30px 15px;
   }
-  .app {
-    width: 100%;
-    max-width: 500px;
-  }
-  h1 {
-    font-size: 26px;
-    color: #222;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .add {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
+  .app { width: 100%; max-width: 500px; }
+  h1 { font-size: 26px; color: #222; margin-bottom: 20px; text-align: center; }
+
+  .add { display: flex; gap: 8px; margin-bottom: 24px; }
   .add input {
-    flex: 1;
-    padding: 12px 14px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    font-size: 15px;
-    outline: none;
+    flex: 1; padding: 12px 14px;
+    border: 2px solid #ddd; border-radius: 10px;
+    font-size: 15px; outline: none;
   }
   .add input:focus { border-color: #5b7cfa; }
   .add button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    background: #5b7cfa;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
+    padding: 12px 20px; border: none; border-radius: 10px;
+    background: #5b7cfa; color: #fff;
+    font-size: 15px; font-weight: 600; cursor: pointer;
   }
   .add button:hover { background: #4565e0; }
+
   .note {
-    background: #fff;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
+    background: #fff; border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,.06);
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex; align-items: center; gap: 12px;
   }
-  .note .txt {
-    flex: 1;
-    font-size: 15px;
-    line-height: 1.4;
-    word-break: break-word;
-  }
-  .note .txt[contenteditable="true"] {
-    outline: 2px solid #5b7cfa;
-    border-radius: 6px;
-    padding: 2px 6px;
-  }
-  .note .date {
-    font-size: 11px;
-    color: #999;
-    white-space: nowrap;
-  }
+  .note .txt { flex: 1; font-size: 15px; line-height: 1.4; word-break: break-word; }
+  .note .date { font-size: 11px; color: #999; white-space: nowrap; }
   .note .del {
-    border: none;
-    background: none;
-    font-size: 18px;
-    color: #c33;
-    cursor: pointer;
-    padding: 4px;
+    border: none; background: none; font-size: 18px;
+    color: #c33; cursor: pointer; padding: 4px;
   }
-  .note .del:hover { color: #e00; }
-  .empty {
-    text-align: center;
-    color: #999;
-    font-size: 14px;
-    margin-top: 40px;
+  .empty { text-align: center; color: #999; font-size: 14px; margin-top: 40px; }
+
+  /* Скрытая страница со статьёй */
+  #page {
+    display: none;
+    background: #fff; border-radius: 12px;
+    padding: 24px 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  }
+  #page h2 { font-size: 22px; margin-bottom: 12px; }
+  #page p { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 12px; }
+  #page .back {
+    display: inline-block; margin-bottom: 16px;
+    padding: 8px 14px; border-radius: 8px;
+    background: #eee; color: #333;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <h1>📝 Заметки</h1>
 
-  <div class="add">
-    <input id="input" type="text" placeholder="Новая заметка...">
-    <button id="btn">Добавить</button>
+  <!-- Главная страница: заметки -->
+  <div id="main">
+    <h1>📝 Заметки</h1>
+
+    <div class="add">
+      <input id="input" type="text" placeholder="Новая заметка...">
+      <button id="btn">Добавить</button>
+    </div>
+
+    <div id="list"></div>
+    <p class="empty" id="empty">Пока пусто. Добавь первую заметку!</p>
   </div>
 
-  <div id="list"></div>
-  <p class="empty" id="empty">Пока пусто. Добавь первую заметку!</p>
+  <!-- Секретная страница про подтягивания -->
+  <div id="page">
+    <button class="back" id="backBtn">← Назад</button>
+    <h2>Как правильно подтягиваться</h2>
+    <p><b>Хват.</b> Руки чуть шире плеч, ладони от себя. Большой палец обхватывает перекладину снизу — так безопаснее для кистей.</p>
+    <p><b>Исходное положение.</b> Повисни на прямых руках, плечи слегка опусти (не «втягивай» их в уши), лопатки сведи назад.</p>
+    <p><b>Подъём.</b> Тяни тело вверх за счёт мышц спины и рук, а не рывком. Подбородок оказывается над перекладиной.</p>
+    <p><b>Опускание.</b> Медленно, на 2–3 секунды. Медленная фаза опускания даёт больше пользы, чем быстрый рывок вверх.</p>
+    <p><b>Дыхание.</b> Вдох на опускании, выдох на подъёме.</p>
+    <p><b>Как начать с нуля.</b> Если пока не получается — делай «негативы»: запрыгни на перекладину и медленно опускайся. 3 подхода по 5 раз — отличный старт.</p>
+  </div>
+
 </div>
 
 <script>
@@ -110,8 +98,14 @@ const input = document.getElementById('input');
 const btn = document.getElementById('btn');
 const list = document.getElementById('list');
 const empty = document.getElementById('empty');
+const main = document.getElementById('main');
+const page = document.getElementById('page');
 
-// Загружаем заметки из памяти браузера (или пустой список)
+// Кодовые слова и их страницы
+const secretPages = {
+  'venture95': 'pullups'
+};
+
 let notes = JSON.parse(localStorage.getItem('notes') || '[]');
 
 function save() {
@@ -129,21 +123,6 @@ function render() {
     const txt = document.createElement('div');
     txt.className = 'txt';
     txt.textContent = note.text;
-    // Редактирование по двойному клику
-    txt.addEventListener('dblclick', () => {
-      txt.contentEditable = 'true';
-      txt.focus();
-    });
-    txt.addEventListener('blur', () => {
-      txt.contentEditable = 'false';
-      const newText = txt.textContent.trim();
-      if (newText) {
-        note.text = newText;
-        save();
-      } else {
-        render(); // пустую не сохраняем
-      }
-    });
 
     const date = document.createElement('span');
     date.className = 'date';
@@ -152,7 +131,6 @@ function render() {
     const del = document.createElement('button');
     del.className = 'del';
     del.textContent = '✕';
-    del.title = 'Удалить';
     del.addEventListener('click', () => {
       notes.splice(i, 1);
       save();
@@ -166,9 +144,20 @@ function render() {
 
 function addNote() {
   const text = input.value.trim();
+
+  // Проверяем кодовое слово
+  const key = text.toLowerCase();
+  if (secretPages[key]) {
+    openPage(secretPages[key]);
+    input.value = '';
+    return;
+  }
+
   if (!text) return;
+
   const now = new Date();
-  const date = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+  const date = now.toLocaleDateString('ru-RU') + ' ' +
+    now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
   notes.unshift({ text, date });
   save();
   render();
@@ -176,10 +165,25 @@ function addNote() {
   input.focus();
 }
 
+function openPage(name) {
+  if (name === 'pullups') {
+    main.style.display = 'none';
+    page.style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+}
+
+function goBack() {
+  page.style.display = 'none';
+  main.style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
 btn.addEventListener('click', addNote);
 input.addEventListener('keydown', e => {
   if (e.key === 'Enter') addNote();
 });
+document.getElementById('backBtn').addEventListener('click', goBack);
 
 render();
 </script>
