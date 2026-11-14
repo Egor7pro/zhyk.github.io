@@ -1,196 +1,331 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Мои заметки</title>
-  <style>
-    :root {
-      --bg: #f5f7fa;
-      --card: #ffffff;
-      --accent: #4f46e5;
-      --text: #1f2937;
-      --border: #e5e7eb;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zhykon</title>
+<style>
+  :root {
+    --bg: #f4f4f5;
+    --sidebar: #ffffff;
+    --text: #37352f;
+    --muted: #9b9a97;
+    --accent: #2383e2;
+    --border: #e9e9e7;
+    --hover: #f7f6f3;
+    --card: #ffffff;
+  }
+  body.dark {
+    --bg: #1a1a1b;
+    --sidebar: #1e1e1f;
+    --text: #e9e9e7;
+    --muted: #8b8b8e;
+    --accent: #4a9eff;
+    --border: #333;
+    --hover: #2a2a2c;
+    --card: #2d2d2f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; height: 100vh; overflow: hidden;
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Сайдбар */
+  .sidebar {
+    width: 260px; min-width: 260px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 12px;
+  }
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 12px; margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .workspace-name { font-weight: 700; font-size: 14px; }
+  .icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 16px; padding: 4px 6px;
+    border-radius: 6px;
+  }
+  .icon-btn:hover { background: var(--hover); }
 
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 2rem;
-      line-height: 1.5;
-    }
+  .section-title {
+    font-size: 11px; text-transform: uppercase;
+    color: var(--muted); letter-spacing: 0.05em;
+    margin: 12px 0 6px;
+  }
+  .menu-item {
+    padding: 6px 10px; border-radius: 6px;
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    color: var(--text);
+  }
+  .menu-item:hover { background: var(--hover); }
+  .menu-item.active { background: var(--hover); font-weight: 600; }
+  .menu-item .emoji { width: 18px; text-align: center; }
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-    }
+  /* Основная область */
+  .main { flex: 1; overflow-y: auto; padding: 40px; }
+  .page-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+  }
+  .page-icon { font-size: 36px; }
+  .page-title {
+    font-size: 32px; font-weight: 700; line-height: 1.2;
+  }
+  .page-subtitle {
+    color: var(--muted); font-size: 15px; margin-top: 4px;
+  }
 
-    header {
-      margin-bottom: 2rem;
-    }
+  /* Карточки-ссылки (как на картинке) */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .card:hover {
+    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .card-row {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .card-icon {
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .card-text h3 {
+    font-size: 16px; font-weight: 600; margin-bottom: 4px;
+  }
+  .card-text p {
+    font-size: 13px; color: var(--muted);
+  }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p.subtitle {
-      color: #6b7280;
-    }
-
-    /* Форма добавления */
-    .add-form {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      margin-bottom: 2rem;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem;
-      font-size: 1rem;
-      resize: vertical;
-      outline: none;
-    }
-
-    textarea:focus {
-      border-color: var(--accent);
-    }
-
-    button {
-      margin-top: 0.75rem;
-      padding: 0.625rem 1.25rem;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #4338ca;
-    }
-
-    /* Список заметок */
-    .notes-list {
-      list-style: none;
-    }
-
-    .note-item {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      position: relative;
-    }
-
-    .note-text {
-      white-space: pre-wrap;
-      color: var(--text);
-    }
-
-    .note-meta {
-      margin-top: 0.75rem;
-      font-size: 0.875rem;
-      color: #9ca3af;
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: transparent;
-      color: #ef4444;
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-  </style>
+  /* Модальное окно для открытия страницы */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center; z-index: 100;
+  }
+  .modal {
+    background: var(--card); padding: 32px; border-radius: 12px;
+    width: 400px; text-align: center;
+  }
+  .modal h2 { margin-bottom: 12px; }
+  .modal p { color: var(--muted); margin-bottom: 20px; }
+  .btn {
+    background: var(--accent); color: white; border: none;
+    padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;
+  }
+  .btn:hover { opacity: 0.9; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Мои заметки</h1>
-      <p class="subtitle">Записывай идеи и задачи в одном месте</p>
-    </header>
+  <aside class="sidebar">
+    <div class="top-bar">
+      <div>
+        <div class="workspace-name">Acme Inc.</div>
+        <div style="font-size:12px; color:var(--muted)">fig@makenotion.com</div>
+      </div>
+      <div>
+        <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
+      </div>
+    </div>
 
-    <section class="add-form">
-      <textarea id="noteInput" placeholder="Новая заметка…"></textarea>
-      <button id="addBtn">Добавить заметку</button>
-    </section>
+    <div class="section-title">Workspace</div>
+    <div id="workspaceMenu"></div>
 
-    <ul class="notes-list" id="notesList"></ul>
+    <div class="section-title">Shared</div>
+    <div id="sharedMenu"></div>
+
+    <div class="section-title">Private</div>
+    <div id="privateMenu"></div>
+
+    <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);">
+      <div class="menu-item" style="color:var(--muted); font-size:13px;">
+        <span class="emoji">📄</span> Templates
+      </div>
+      <div class="menu-item" style="color:var(--muted); font-size:13px;">
+        <span class="emoji">⬇️</span> Import
+      </div>
+      <div class="menu-item" style="color:var(--muted); font-size:13px;">
+        <span class="emoji">🗑</span> Trash
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div class="page-icon" id="currentPageIcon">🏠</div>
+      <div>
+        <div class="page-title" id="currentPageTitle">Acme Home</div>
+        <div class="page-subtitle" id="currentPageSubtitle">Главная страница рабочего пространства</div>
+      </div>
+    </div>
+
+    <div class="grid" id="pageContent"></div>
+  </main>
+
+  <div class="modal-overlay" id="openModal">
+    <div class="modal">
+      <h2 id="modalTitle">Открыть страницу?</h2>
+      <p id="modalDesc">Вы перейдёте на эту страницу. Все заметки останутся на месте.</p>
+      <button class="btn" onclick="confirmOpen()">Открыть</button>
+    </div>
   </div>
 
-  <script>
-    const input = document.getElementById('noteInput');
-    const addBtn = document.getElementById('addBtn');
-    const list = document.getElementById('notesList');
+<script>
+const KEY = 'zhykon_v2_pages';
 
-    // Загружаем заметки из localStorage
-    function renderNotes() {
-      const notes = JSON.parse(localStorage.getItem('zhykNotes') || '[]');
-      list.innerHTML = '';
-      notes.forEach((note, index) => {
-        const li = document.createElement('li');
-        li.className = 'note-item';
-        li.innerHTML = `
-          <button class="delete-btn" data-index="${index}">×</button>
-          <div class="note-text">${escapeHtml(note.text)}</div>
-          <div class="note-meta">Добавлено: ${new Date(note.date).toLocaleString('ru-RU')}</div>
-        `;
-        list.appendChild(li);
-      });
-    }
+// Данные страниц (структура как на картинке)
+let pages = JSON.parse(localStorage.getItem(KEY)) || {
+  active: 'home',
+  data: {
+    home: {
+      title: 'Acme Home', icon: '🏠', subtitle: 'Главная страница рабочего пространства',
+      content: [
+        { section: 'Team', items: [
+          { id: 'wn', title: 'What\'s New', icon: '⭐', desc: '' },
+          { id: 'mvv', title: 'Mission, Vision, Values', icon: '🎯', desc: '' },
+          { id: 'cg', title: 'Company Goals - 2019', icon: '🚌', desc: '' },
+          { id: 'ed', title: 'Employee Directory', icon: '🏢', desc: '' },
+          { id: 'rp', title: 'Recent Press', icon: '📢', desc: '' }
+        ]},
+        { section: 'Policies', items: [
+          { id: 'om', title: 'Office Manual', icon: '📁', desc: '' },
+          { id: 'vp', title: 'Vacation Policy', icon: '🚗', desc: '' },
+          { id: 'rto', title: 'Request Time Off', icon: '😴', desc: '' },
+          { id: 'bp', title: 'Benefits Policies', icon: '☕', desc: '' },
+          { id: 'ep', title: 'Expense Policy', icon: '💼', desc: '' }
+        ]}
+      ]
+    },
+    tracker: { title: 'Applicant Tracker', icon: '📺', subtitle: 'Отслеживание кандидатов', content:  },
+    roadmap: { title: 'Roadmap', icon: '🚗', subtitle: 'План развития', content:  },
+    notes: { title: 'Meeting Notes', icon: '✏️', subtitle: 'Заметки с встреч', content:  },
+    tasks: { title: 'Task List', icon: '📋', subtitle: 'Список задач', content:  }
+  }
+};
 
-    // Добавляем заметку
-    addBtn.addEventListener('click', () => {
-      const text = input.value.trim();
-      if (!text) return;
+function save() { localStorage.setItem(KEY, JSON.stringify(pages)); }
 
-      const notes = JSON.parse(localStorage.getItem('zhykNotes') || '[]');
-      notes.push({
-        text,
-        date: new Date().toISOString()
-      });
-      localStorage.setItem('zhykNotes', JSON.stringify(notes));
-      input.value = '';
-      renderNotes();
+// Рендер меню
+function renderMenu() {
+  const wm = document.getElementById('workspaceMenu');
+  const sm = document.getElementById('sharedMenu');
+  const pm = document.getElementById('privateMenu');
+  wm.innerHTML = ''; sm.innerHTML = ''; pm.innerHTML = '';
+
+  const workspaceItems = [
+    { id: 'home', title: 'Acme Home', icon: '🏠' },
+    { id: 'tracker', title: 'Applicant Tracker', icon: '📺' },
+    { id: 'roadmap', title: 'Roadmap', icon: '🚗' },
+    { id: 'notes', title: 'Meeting Notes', icon: '✏️' },
+    { id: 'tasks', title: 'Task List', icon: '📋' }
+  ];
+
+  workspaceItems.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'menu-item' + (pages.active === p.id ? ' active' : '');
+    div.innerHTML = `<span class="emoji">${p.icon}</span>${p.title}`;
+    div.onclick = () => openPage(p.id);
+    wm.appendChild(div);
+  });
+
+  // Shared и Private пока пустые, как заглушки
+  sm.innerHTML = '<div class="menu-item" style="color:var(--muted)">(пусто)</div>';
+  pm.innerHTML = '<div class="menu-item" style="color:var(--muted)">(пусто)</div>';
+}
+
+// Рендер контента страницы
+function renderPage() {
+  const page = pages.data[pages.active];
+  document.getElementById('currentPageIcon').textContent = page.icon;
+  document.getElementById('currentPageTitle').textContent = page.title;
+  document.getElementById('currentPageSubtitle').textContent = page.subtitle;
+
+  const container = document.getElementById('pageContent');
+  container.innerHTML = '';
+
+  if (!page.content || page.content.length === 0) {
+    container.innerHTML = '<div style="padding:40px; color:var(--muted)">Здесь пока нет карточек.</div>';
+    return;
+  }
+
+  page.content.forEach(section => {
+    const secDiv = document.createElement('div');
+    secDiv.style.width = '100%';
+    secDiv.style.marginBottom = '24px';
+    secDiv.innerHTML = `<h3 style="font-size:16px; margin-bottom:12px; color:var(--text)">\${section.section}</h3>`;
+    
+    const grid = document.createElement('div');
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))';
+    grid.style.gap = '12px';
+
+    section.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => showModal(item);
+      card.innerHTML = `
+        <div class="card-row">
+          <div class="card-icon">\${item.icon}</div>
+          <div class="card-text">
+            <h3>\${item.title}</h3>
+            ${item.desc ? `<p>${item.desc}</p>` : ''}
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
     });
 
-    // Удаляем заметку
-    list.addEventListener('click', (e) => {
-      if (e.target.matches('.delete-btn')) {
-        const index = parseInt(e.target.dataset.index, 10);
-        const notes = JSON.parse(localStorage.getItem('zhykNotes') || '[]');
-        notes.splice(index, 1);
-        localStorage.setItem('zhykNotes', JSON.stringify(notes));
-        renderNotes();
-      }
-    });
+    secDiv.appendChild(grid);
+    container.appendChild(secDiv);
+  });
+}
 
-    // Защита от XSS
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+function openPage(id) {
+  pages.active = id;
+  save();
+  renderMenu();
+  renderPage();
+}
 
-    renderNotes();
-  </script>
+// Модальное окно
+let pendingItem = null;
+function showModal(item) {
+  pendingItem = item;
+  document.getElementById('modalTitle').textContent = `Открыть "\${item.title}"?`;
+  document.getElementById('modalDesc').textContent = 'Это просто карточка-ссылка. В этой версии Zhykon она пока не ведёт на другую страницу, но имитирует поведение Notion.';
+  document.getElementById('openModal').style.display = 'flex';
+}
+function confirmOpen() {
+  alert('В этой версии Zhykon карточки — это заглушки. В будущем здесь будет переход на подстраницу или модальное окно с контентом.');
+  document.getElementById('openModal').style.display = 'none';
+  pendingItem = null;
+}
+
+// Тема
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme() {
+  document.body.classList.toggle('dark', pages.dark);
+  themeBtn.textContent = pages.dark ? '☀️' : '🌙';
+}
+themeBtn.onclick = () => {
+  pages.dark = !pages.dark;
+  save();
+  applyTheme();
+};
+
+renderMenu();
+renderPage();
+applyTheme();
+</script>
 </body>
 </html>
