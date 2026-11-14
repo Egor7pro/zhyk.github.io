@@ -1,331 +1,369 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Zhykon</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Продуктивный день</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4f4f5;
-    --sidebar: #ffffff;
-    --text: #37352f;
-    --muted: #9b9a97;
-    --accent: #2383e2;
-    --border: #e9e9e7;
-    --hover: #f7f6f3;
-    --card: #ffffff;
+    --bg: #eef1f5;
+    --paper: #ffffff;
+    --ink: #1a2230;
+    --muted: #5d6879;
+    --line: #d5dbe4;
+    --sun: #f0b429;
+    --sun-soft: #fdf1cf;
+    --deep: #1d5f6b;
+    --deep-soft: #dcecee;
+    --danger: #b3382c;
+    --radius: 14px;
   }
-  body.dark {
-    --bg: #1a1a1b;
-    --sidebar: #1e1e1f;
-    --text: #e9e9e7;
-    --muted: #8b8b8e;
-    --accent: #4a9eff;
-    --border: #333;
-    --hover: #2a2a2c;
-    --card: #2d2d2f;
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12171f;
+      --paper: #1b222d;
+      --ink: #eceff4;
+      --muted: #9aa5b6;
+      --line: #2c3544;
+      --sun: #f0b429;
+      --sun-soft: #3a3118;
+      --deep: #6cc0cc;
+      --deep-soft: #1d3a40;
+      --danger: #ee8174;
+    }
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg); color: var(--text);
-    display: flex; height: 100vh; overflow: hidden;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
   }
+  h1, h2 { font-family: "Unbounded", "Onest", system-ui, sans-serif; margin: 0; letter-spacing: -0.01em; }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--deep); outline-offset: 2px; }
 
-  /* Сайдбар */
-  .sidebar {
-    width: 260px; min-width: 260px;
-    background: var(--sidebar);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    padding: 12px;
-  }
-  .top-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-bottom: 12px; margin-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .workspace-name { font-weight: 700; font-size: 14px; }
-  .icon-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--muted); font-size: 16px; padding: 4px 6px;
-    border-radius: 6px;
-  }
-  .icon-btn:hover { background: var(--hover); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 20px 64px; }
 
-  .section-title {
-    font-size: 11px; text-transform: uppercase;
-    color: var(--muted); letter-spacing: 0.05em;
-    margin: 12px 0 6px;
-  }
-  .menu-item {
-    padding: 6px 10px; border-radius: 6px;
-    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
-    color: var(--text);
-  }
-  .menu-item:hover { background: var(--hover); }
-  .menu-item.active { background: var(--hover); font-weight: 600; }
-  .menu-item .emoji { width: 18px; text-align: center; }
+  /* Шапка */
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.05; font-weight: 700; }
+  .date { color: var(--muted); font-size: 1.05rem; text-transform: capitalize; }
+  .greeting { margin: 6px 0 0; color: var(--muted); }
 
-  /* Основная область */
-  .main { flex: 1; overflow-y: auto; padding: 40px; }
-  .page-header {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+  /* Лента дня — главный элемент */
+  .day {
+    margin: 28px 0 24px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px 18px;
   }
-  .page-icon { font-size: 36px; }
-  .page-title {
-    font-size: 32px; font-weight: 700; line-height: 1.2;
-  }
-  .page-subtitle {
-    color: var(--muted); font-size: 15px; margin-top: 4px;
-  }
+  .day-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .95rem; color: var(--muted); }
+  .day-head strong { color: var(--ink); font-weight: 600; }
+  .strip { position: relative; display: grid; grid-template-columns: repeat(18, 1fr); gap: 3px; margin: 14px 0 8px; }
+  .strip i { height: 34px; border-radius: 5px; background: var(--deep-soft); }
+  .strip i.past { background: var(--deep); }
+  .strip i.now { background: var(--sun); }
+  .ticks { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); }
 
-  /* Карточки-ссылки (как на картинке) */
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-  }
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; padding: 16px; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .card:hover {
-    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border-color: var(--accent);
-  }
-  .card-row {
-    display: flex; align-items: flex-start; gap: 12px;
-  }
-  .card-icon {
-    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .card-text h3 {
-    font-size: 16px; font-weight: 600; margin-bottom: 4px;
-  }
-  .card-text p {
-    font-size: 13px; color: var(--muted);
-  }
+  /* Сетка */
+  .grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .col { display: grid; gap: 24px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card h2 { font-size: 1.15rem; font-weight: 500; }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .count { color: var(--muted); font-size: .9rem; }
 
-  /* Модальное окно для открытия страницы */
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    display: none; align-items: center; justify-content: center; z-index: 100;
-  }
-  .modal {
-    background: var(--card); padding: 32px; border-radius: 12px;
-    width: 400px; text-align: center;
-  }
-  .modal h2 { margin-bottom: 12px; }
-  .modal p { color: var(--muted); margin-bottom: 20px; }
-  .btn {
-    background: var(--accent); color: white; border: none;
-    padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;
-  }
-  .btn:hover { opacity: 0.9; }
+  /* Задачи */
+  .add { display: flex; gap: 8px; margin-bottom: 14px; }
+  .add input { flex: 1; min-width: 0; padding: 11px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+  .btn { border: 0; border-radius: 10px; padding: 11px 16px; font-weight: 600; background: var(--deep); color: #fff; }
+  @media (prefers-color-scheme: dark) { .btn { color: #0d1318; } }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn:hover { filter: brightness(1.08); }
+  .bar { height: 8px; border-radius: 99px; background: var(--deep-soft); overflow: hidden; margin-bottom: 14px; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--sun); transition: width .3s; }
+
+  ul { list-style: none; margin: 0; padding: 0; }
+  .task { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line); }
+  .task:last-child { border-bottom: 0; }
+  .task input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--deep); flex: none; }
+  .task label { flex: 1; word-break: break-word; cursor: pointer; }
+  .task.done label { color: var(--muted); text-decoration: line-through; }
+  .icon { border: 0; background: transparent; color: var(--muted); padding: 6px 8px; border-radius: 8px; font-size: 1.05rem; line-height: 1; }
+  .icon:hover { color: var(--danger); background: var(--bg); }
+  .empty { color: var(--muted); padding: 8px 0; }
+
+  /* Таймер */
+  .timer { text-align: center; }
+  .time { font-family: "Unbounded", sans-serif; font-size: clamp(2.6rem, 8vw, 3.6rem); font-weight: 500; margin: 6px 0 14px; font-variant-numeric: tabular-nums; }
+  .modes { display: inline-flex; gap: 6px; margin-bottom: 8px; }
+  .modes button { border: 1px solid var(--line); background: transparent; padding: 6px 14px; border-radius: 99px; }
+  .modes button[aria-pressed=true] { background: var(--sun-soft); border-color: var(--sun); font-weight: 600; }
+  .timer .actions { display: flex; justify-content: center; gap: 8px; }
+
+  /* Заметки */
+  .tools { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tools input { flex: 1; min-width: 0; padding: 11px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+  .notes { display: grid; gap: 12px; }
+  .note { background: var(--sun-soft); border: 1px solid transparent; border-radius: 12px; padding: 12px 14px 10px; }
+  .note input.title { width: 100%; border: 0; background: transparent; font-weight: 600; padding: 2px 0 4px; }
+  .note textarea { width: 100%; min-height: 90px; border: 0; background: transparent; resize: vertical; padding: 2px 0; line-height: 1.5; }
+  .note input:focus-visible, .note textarea:focus-visible { outline: 2px solid var(--deep); outline-offset: 3px; border-radius: 4px; }
+  .note footer { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  @media (prefers-color-scheme: dark) { .note { background: #29303c; } }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="top-bar">
-      <div>
-        <div class="workspace-name">Acme Inc.</div>
-        <div style="font-size:12px; color:var(--muted)">fig@makenotion.com</div>
-      </div>
-      <div>
-        <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
-      </div>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="date" id="date"></div>
+      <h1>Продуктивный день</h1>
+      <p class="greeting" id="greeting"></p>
+    </div>
+  </header>
+
+  <section class="day" aria-label="Ход дня">
+    <div class="day-head">
+      <span>Сейчас <strong id="clock">--:--</strong></span>
+      <span id="dayLeft"></span>
+    </div>
+    <div class="strip" id="strip" role="img" aria-label="Шкала дня с 6:00 до 24:00"></div>
+    <div class="ticks"><span>6:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+  </section>
+
+  <main class="grid">
+    <div class="col">
+      <section class="card" aria-labelledby="tasksTitle">
+        <div class="card-head">
+          <h2 id="tasksTitle">Задачи на сегодня</h2>
+          <span class="count" id="taskCount"></span>
+        </div>
+        <div class="bar" aria-hidden="true"><span id="progress"></span></div>
+        <form class="add" id="taskForm">
+          <input id="taskInput" type="text" placeholder="Что нужно сделать?" aria-label="Новая задача" maxlength="140" autocomplete="off">
+          <button class="btn" type="submit">Добавить</button>
+        </form>
+        <ul id="taskList"></ul>
+        <button class="btn ghost" id="clearDone" type="button" style="margin-top:12px">Убрать выполненные</button>
+      </section>
+
+      <section class="card timer" aria-labelledby="timerTitle">
+        <div class="card-head"><h2 id="timerTitle">Фокус-таймер</h2></div>
+        <div class="modes" role="group" aria-label="Режим таймера">
+          <button type="button" data-min="25" aria-pressed="true">Работа 25</button>
+          <button type="button" data-min="5" aria-pressed="false">Перерыв 5</button>
+          <button type="button" data-min="15" aria-pressed="false">Отдых 15</button>
+        </div>
+        <div class="time" id="time" role="timer" aria-live="off">25:00</div>
+        <div class="actions">
+          <button class="btn" id="startBtn" type="button">Старт</button>
+          <button class="btn ghost" id="resetBtn" type="button">Сбросить</button>
+        </div>
+      </section>
     </div>
 
-    <div class="section-title">Workspace</div>
-    <div id="workspaceMenu"></div>
-
-    <div class="section-title">Shared</div>
-    <div id="sharedMenu"></div>
-
-    <div class="section-title">Private</div>
-    <div id="privateMenu"></div>
-
-    <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);">
-      <div class="menu-item" style="color:var(--muted); font-size:13px;">
-        <span class="emoji">📄</span> Templates
+    <section class="card" aria-labelledby="notesTitle">
+      <div class="card-head">
+        <h2 id="notesTitle">Заметки</h2>
+        <span class="count" id="noteCount"></span>
       </div>
-      <div class="menu-item" style="color:var(--muted); font-size:13px;">
-        <span class="emoji">⬇️</span> Import
+      <div class="tools">
+        <input id="search" type="search" placeholder="Поиск по заметкам" aria-label="Поиск по заметкам">
+        <button class="btn" id="newNote" type="button">Новая заметка</button>
       </div>
-      <div class="menu-item" style="color:var(--muted); font-size:13px;">
-        <span class="emoji">🗑</span> Trash
-      </div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="page-header">
-      <div class="page-icon" id="currentPageIcon">🏠</div>
-      <div>
-        <div class="page-title" id="currentPageTitle">Acme Home</div>
-        <div class="page-subtitle" id="currentPageSubtitle">Главная страница рабочего пространства</div>
-      </div>
-    </div>
-
-    <div class="grid" id="pageContent"></div>
+      <div class="notes" id="notes"></div>
+    </section>
   </main>
-
-  <div class="modal-overlay" id="openModal">
-    <div class="modal">
-      <h2 id="modalTitle">Открыть страницу?</h2>
-      <p id="modalDesc">Вы перейдёте на эту страницу. Все заметки останутся на месте.</p>
-      <button class="btn" onclick="confirmOpen()">Открыть</button>
-    </div>
-  </div>
+</div>
 
 <script>
-const KEY = 'zhykon_v2_pages';
+(function () {
+  'use strict';
 
-// Данные страниц (структура как на картинке)
-let pages = JSON.parse(localStorage.getItem(KEY)) || {
-  active: 'home',
-  data: {
-    home: {
-      title: 'Acme Home', icon: '🏠', subtitle: 'Главная страница рабочего пространства',
-      content: [
-        { section: 'Team', items: [
-          { id: 'wn', title: 'What\'s New', icon: '⭐', desc: '' },
-          { id: 'mvv', title: 'Mission, Vision, Values', icon: '🎯', desc: '' },
-          { id: 'cg', title: 'Company Goals - 2019', icon: '🚌', desc: '' },
-          { id: 'ed', title: 'Employee Directory', icon: '🏢', desc: '' },
-          { id: 'rp', title: 'Recent Press', icon: '📢', desc: '' }
-        ]},
-        { section: 'Policies', items: [
-          { id: 'om', title: 'Office Manual', icon: '📁', desc: '' },
-          { id: 'vp', title: 'Vacation Policy', icon: '🚗', desc: '' },
-          { id: 'rto', title: 'Request Time Off', icon: '😴', desc: '' },
-          { id: 'bp', title: 'Benefits Policies', icon: '☕', desc: '' },
-          { id: 'ep', title: 'Expense Policy', icon: '💼', desc: '' }
-        ]}
-      ]
-    },
-    tracker: { title: 'Applicant Tracker', icon: '📺', subtitle: 'Отслеживание кандидатов', content:  },
-    roadmap: { title: 'Roadmap', icon: '🚗', subtitle: 'План развития', content:  },
-    notes: { title: 'Meeting Notes', icon: '✏️', subtitle: 'Заметки с встреч', content:  },
-    tasks: { title: 'Task List', icon: '📋', subtitle: 'Список задач', content:  }
+  // ---------- Хранилище ----------
+  function load(key, fallback) {
+    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
   }
-};
+  function save(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function $(id) { return document.getElementById(id); }
 
-function save() { localStorage.setItem(KEY, JSON.stringify(pages)); }
+  var tasks = load('pd_tasks', []);
+  var notes = load('pd_notes', []);
 
-// Рендер меню
-function renderMenu() {
-  const wm = document.getElementById('workspaceMenu');
-  const sm = document.getElementById('sharedMenu');
-  const pm = document.getElementById('privateMenu');
-  wm.innerHTML = ''; sm.innerHTML = ''; pm.innerHTML = '';
+  // ---------- Шапка и лента дня ----------
+  var START = 6, END = 24;
 
-  const workspaceItems = [
-    { id: 'home', title: 'Acme Home', icon: '🏠' },
-    { id: 'tracker', title: 'Applicant Tracker', icon: '📺' },
-    { id: 'roadmap', title: 'Roadmap', icon: '🚗' },
-    { id: 'notes', title: 'Meeting Notes', icon: '✏️' },
-    { id: 'tasks', title: 'Task List', icon: '📋' }
-  ];
+  function renderHeader() {
+    var now = new Date();
+    $('date').textContent = now.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+    var h = now.getHours();
+    $('greeting').textContent = h < 5 ? 'Пора отдыхать.' : h < 12 ? 'Доброе утро. С чего начнём?' : h < 18 ? 'Добрый день. Что на очереди?' : 'Добрый вечер. Подведите итоги дня.';
+    $('clock').textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
-  workspaceItems.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'menu-item' + (pages.active === p.id ? ' active' : '');
-    div.innerHTML = `<span class="emoji">${p.icon}</span>${p.title}`;
-    div.onclick = () => openPage(p.id);
-    wm.appendChild(div);
-  });
+    var cur = h + now.getMinutes() / 60;
+    var left = Math.max(0, END - Math.max(cur, START));
+    var lh = Math.floor(left), lm = Math.round((left - lh) * 60);
+    $('dayLeft').innerHTML = cur >= END ? 'День закончился' : 'До конца дня <strong>' + lh + ' ч ' + lm + ' мин</strong>';
 
-  // Shared и Private пока пустые, как заглушки
-  sm.innerHTML = '<div class="menu-item" style="color:var(--muted)">(пусто)</div>';
-  pm.innerHTML = '<div class="menu-item" style="color:var(--muted)">(пусто)</div>';
-}
-
-// Рендер контента страницы
-function renderPage() {
-  const page = pages.data[pages.active];
-  document.getElementById('currentPageIcon').textContent = page.icon;
-  document.getElementById('currentPageTitle').textContent = page.title;
-  document.getElementById('currentPageSubtitle').textContent = page.subtitle;
-
-  const container = document.getElementById('pageContent');
-  container.innerHTML = '';
-
-  if (!page.content || page.content.length === 0) {
-    container.innerHTML = '<div style="padding:40px; color:var(--muted)">Здесь пока нет карточек.</div>';
-    return;
+    var strip = $('strip');
+    if (!strip.children.length) {
+      for (var i = 0; i < END - START; i++) strip.appendChild(document.createElement('i'));
+    }
+    for (var j = 0; j < strip.children.length; j++) {
+      var hour = START + j;
+      strip.children[j].className = hour + 1 <= cur ? 'past' : (hour <= cur && cur < hour + 1 ? 'now' : '');
+    }
   }
 
-  page.content.forEach(section => {
-    const secDiv = document.createElement('div');
-    secDiv.style.width = '100%';
-    secDiv.style.marginBottom = '24px';
-    secDiv.innerHTML = `<h3 style="font-size:16px; margin-bottom:12px; color:var(--text)">\${section.section}</h3>`;
-    
-    const grid = document.createElement('div');
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))';
-    grid.style.gap = '12px';
-
-    section.items.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.onclick = () => showModal(item);
-      card.innerHTML = `
-        <div class="card-row">
-          <div class="card-icon">\${item.icon}</div>
-          <div class="card-text">
-            <h3>\${item.title}</h3>
-            ${item.desc ? `<p>${item.desc}</p>` : ''}
-          </div>
-        </div>
-      `;
-      grid.appendChild(card);
+  // ---------- Задачи ----------
+  function renderTasks() {
+    var list = $('taskList');
+    list.innerHTML = '';
+    if (!tasks.length) {
+      var li = document.createElement('li');
+      li.className = 'empty';
+      li.textContent = 'Пока пусто. Запишите первую задачу.';
+      list.appendChild(li);
+    }
+    tasks.forEach(function (t) {
+      var li = document.createElement('li');
+      li.className = 'task' + (t.done ? ' done' : '');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = 't' + t.id; cb.checked = t.done;
+      cb.addEventListener('change', function () { t.done = cb.checked; save('pd_tasks', tasks); renderTasks(); });
+      var lb = document.createElement('label');
+      lb.htmlFor = cb.id; lb.textContent = t.text;
+      var del = document.createElement('button');
+      del.className = 'icon'; del.type = 'button'; del.textContent = '✕';
+      del.setAttribute('aria-label', 'Удалить задачу');
+      del.addEventListener('click', function () {
+        tasks = tasks.filter(function (x) { return x.id !== t.id; });
+        save('pd_tasks', tasks); renderTasks();
+      });
+      li.appendChild(cb); li.appendChild(lb); li.appendChild(del);
+      list.appendChild(li);
     });
+    var done = tasks.filter(function (t) { return t.done; }).length;
+    $('taskCount').textContent = tasks.length ? 'Выполнено ' + done + ' из ' + tasks.length : '';
+    $('progress').style.width = tasks.length ? (done / tasks.length * 100) + '%' : '0';
+  }
 
-    secDiv.appendChild(grid);
-    container.appendChild(secDiv);
+  $('taskForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var text = $('taskInput').value.trim();
+    if (!text) return;
+    tasks.push({ id: uid(), text: text, done: false });
+    $('taskInput').value = '';
+    save('pd_tasks', tasks); renderTasks();
   });
-}
+  $('clearDone').addEventListener('click', function () {
+    tasks = tasks.filter(function (t) { return !t.done; });
+    save('pd_tasks', tasks); renderTasks();
+  });
 
-function openPage(id) {
-  pages.active = id;
-  save();
-  renderMenu();
-  renderPage();
-}
+  // ---------- Таймер ----------
+  var total = 25 * 60, remaining = total, tick = null;
+  function fmt(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function drawTime() { $('time').textContent = fmt(remaining); document.title = (tick ? fmt(remaining) + ' · ' : '') + 'Продуктивный день'; }
+  function stopTimer() { clearInterval(tick); tick = null; $('startBtn').textContent = 'Старт'; }
+  function setMode(min) {
+    stopTimer(); total = min * 60; remaining = total; drawTime();
+    document.querySelectorAll('.modes button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.min === min)); });
+  }
+  document.querySelectorAll('.modes button').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(+b.dataset.min); });
+  });
+  $('startBtn').addEventListener('click', function () {
+    if (tick) { stopTimer(); return; }
+    $('startBtn').textContent = 'Пауза';
+    var end = Date.now() + remaining * 1000;
+    tick = setInterval(function () {
+      remaining = Math.max(0, Math.round((end - Date.now()) / 1000));
+      drawTime();
+      if (remaining === 0) { stopTimer(); drawTime(); alert('Время вышло!'); }
+    }, 250);
+  });
+  $('resetBtn').addEventListener('click', function () { stopTimer(); remaining = total; drawTime(); });
 
-// Модальное окно
-let pendingItem = null;
-function showModal(item) {
-  pendingItem = item;
-  document.getElementById('modalTitle').textContent = `Открыть "\${item.title}"?`;
-  document.getElementById('modalDesc').textContent = 'Это просто карточка-ссылка. В этой версии Zhykon она пока не ведёт на другую страницу, но имитирует поведение Notion.';
-  document.getElementById('openModal').style.display = 'flex';
-}
-function confirmOpen() {
-  alert('В этой версии Zhykon карточки — это заглушки. В будущем здесь будет переход на подстраницу или модальное окно с контентом.');
-  document.getElementById('openModal').style.display = 'none';
-  pendingItem = null;
-}
+  // ---------- Заметки ----------
+  function stamp(ts) {
+    return new Date(ts).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+  function renderNotes() {
+    var q = $('search').value.trim().toLowerCase();
+    var box = $('notes');
+    box.innerHTML = '';
+    var shown = notes.filter(function (n) {
+      return !q || (n.title + ' ' + n.text).toLowerCase().indexOf(q) !== -1;
+    });
+    $('noteCount').textContent = notes.length ? 'Всего: ' + notes.length : '';
+    if (!shown.length) {
+      var p = document.createElement('p');
+      p.className = 'empty';
+      p.textContent = notes.length ? 'Ничего не найдено.' : 'Заметок пока нет. Нажмите «Новая заметка».';
+      box.appendChild(p);
+      return;
+    }
+    shown.forEach(function (n) {
+      var el = document.createElement('article');
+      el.className = 'note';
+      var title = document.createElement('input');
+      title.className = 'title'; title.type = 'text'; title.placeholder = 'Заголовок';
+      title.setAttribute('aria-label', 'Заголовок заметки'); title.value = n.title;
+      var text = document.createElement('textarea');
+      text.placeholder = 'Текст заметки'; text.setAttribute('aria-label', 'Текст заметки'); text.value = n.text;
+      var foot = document.createElement('footer');
+      var when = document.createElement('span'); when.textContent = 'Изменено ' + stamp(n.updated);
+      var del = document.createElement('button');
+      del.className = 'icon'; del.type = 'button'; del.textContent = 'Удалить';
+      del.style.fontSize = '.85rem';
+      del.addEventListener('click', function () {
+        notes = notes.filter(function (x) { return x.id !== n.id; });
+        save('pd_notes', notes); renderNotes();
+      });
+      function onEdit() {
+        n.title = title.value; n.text = text.value; n.updated = Date.now();
+        when.textContent = 'Изменено ' + stamp(n.updated);
+        save('pd_notes', notes);
+      }
+      title.addEventListener('input', onEdit);
+      text.addEventListener('input', onEdit);
+      foot.appendChild(when); foot.appendChild(del);
+      el.appendChild(title); el.appendChild(text); el.appendChild(foot);
+      box.appendChild(el);
+    });
+  }
+  $('newNote').addEventListener('click', function () {
+    $('search').value = '';
+    notes.unshift({ id: uid(), title: '', text: '', updated: Date.now() });
+    save('pd_notes', notes); renderNotes();
+    var first = document.querySelector('.note input.title');
+    if (first) first.focus();
+  });
+  $('search').addEventListener('input', renderNotes);
 
-// Тема
-const themeBtn = document.getElementById('themeBtn');
-function applyTheme() {
-  document.body.classList.toggle('dark', pages.dark);
-  themeBtn.textContent = pages.dark ? '☀️' : '🌙';
-}
-themeBtn.onclick = () => {
-  pages.dark = !pages.dark;
-  save();
-  applyTheme();
-};
-
-renderMenu();
-renderPage();
-applyTheme();
+  // ---------- Старт ----------
+  renderHeader(); renderTasks(); renderNotes(); drawTime();
+  setInterval(renderHeader, 30000);
+})();
 </script>
 </body>
 </html>
