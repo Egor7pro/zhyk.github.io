@@ -1087,7 +1087,6 @@ body[data-tab="fd"] .fbg{opacity:1}
 /* ===== Нижняя навигация (3 кнопки) ===== */
 @keyframes bnp{0%{transform:translateY(0)}40%{transform:translateY(-8px) scale(1.25)}100%{transform:translateY(0) scale(1.12)}}
 body{padding-bottom:120px}
-#v-pl .sg button{font-size:14px;padding:9px 2px}
 .bn{left:50%;right:auto;transform:translateX(-50%);width:min(420px,calc(100% - 28px));bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:1px solid var(--bd);border-radius:28px;background:color-mix(in srgb,var(--card) 80%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 14px 40px #0004,inset 0 1px 0 #ffffff22}
 .nvi{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px) / 3);border-radius:22px;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 50%,var(--y)));box-shadow:0 8px 20px color-mix(in srgb,var(--ac) 50%,transparent);transition:transform .5s cubic-bezier(.3,1.25,.4,1)}
 .bn[data-i="1"] .nvi{transform:translateX(100%)}
@@ -1097,3 +1096,36 @@ body{padding-bottom:120px}
 .bn button.on{background:none;color:#fff;font-weight:700}
 .bn button.on span{transform:scale(1.12);animation:bnp .55s cubic-bezier(.3,1.4,.4,1)}
 @media (prefers-reduced-motion:reduce){.nvi{transition:none}}
+
+/* ===== Профиль и подписка: улучшения ===== */
+.avw{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.av{
+  width:64px;height:64px;border-radius:50%;
+  border:2px solid var(--ac);background:var(--ac2);
+  font-size:32px;cursor:pointer;flex:none;
+  transition:transform .2s;
+}
+.av:hover{transform:scale(1.08)}
+.avname{font-weight:700;font-size:18px;margin:0}
+.avsub{color:var(--mu);font-size:13px;margin:2px 0 0}
+.achs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ach{text-align:center;background:var(--ac2);border-radius:12px;padding:10px 6px}
+.ach b{display:block;font-size:20px;color:var(--ac)}
+.ach small{color:var(--mu);font-size:12px}
+@keyframes avpop{0%{transform:scale(.4)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.av.pop{animation:avpop .4s}
+@media (prefers-reduced-motion:reduce){.av.pop{animation:none!important}}
+.svd{color:var(--ac);font-weight:600;margin:6px 0 0;min-height:20px}
+.cmp table{width:100%;border-collapse:collapse;font-size:14px}
+.cmp th{color:var(--mu);font-weight:600;padding:8px 4px;text-align:center;border-bottom:1px solid var(--bd)}
+.cmp td{padding:8px 4px;text-align:center;border-bottom:1px solid var(--bd)}
+.cmp td:first-child{text-align:left}
+.cmp .yes{color:var(--ac);font-weight:700}
+.cmp .no{color:var(--mu)}
+.cmp tr:last-child td{border-bottom:0}
+/* ===== Вода, вес и недавние продукты ===== */
+.wl{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:4px}
+.wg{aspect-ratio:2/3;min-height:34px;border:2px solid var(--ac2);border-radius:6px 6px 12px 12px;background:var(--ac2);cursor:pointer;transition:background .2s,border-color .2s,transform .15s;padding:0}
+.wg.on{background:var(--b);border-color:var(--b)}
+.wg:active{transform:scale(.9)}
+@media (prefers-reduced-motion:reduce){.wg{transition:none}}

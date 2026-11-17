@@ -82,7 +82,6 @@ document.querySelector(".sw").onclick=function(e){var b=e.target.closest("button
 function setTh(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("zhyk_theme",t)}catch(e){}$("th").textContent=t==="dark"?"☀️":"🌙"}
 $("th").onclick=function(){setTh(document.documentElement.dataset.theme==="dark"?"light":"dark")};
 $("th").textContent=document.documentElement.dataset.theme==="dark"?"☀️":"🌙";
-render();loadP();
 
 /* ===== Анимации ===== */
 function ent(){document.body.classList.add("ent");clearTimeout(ent.t);ent.t=setTimeout(function(){document.body.classList.remove("ent")},1100)}
@@ -106,3 +105,41 @@ s.className="fl";s.textContent=e;s.style.left=x0+"px";s.style.top=r1.top+"px";do
 s.animate([{transform:"translate(-50%,0) scale(1) rotate(0)",opacity:1},{transform:"translate(calc(-50% + "+dx*.5+"px),"+(dy*.5-90)+"px) scale(1.7) rotate(180deg)",opacity:1,offset:.5},{transform:"translate(calc(-50% + "+dx+"px),"+dy+"px) scale(.6) rotate(360deg)",opacity:.9}],{duration:650,easing:"cubic-bezier(.4,0,.3,1)"}).onfinish=function(){s.remove()}}
 (function(){var E=["🍎","🥑","🥦","🍋","🍓","🥕","🍇","🥐","🍳","🥛"],b=document.createElement("div");b.className="fbg";b.setAttribute("aria-hidden","true");
 b.innerHTML=E.map(function(e,i){return '<span style="left:'+(i*10+3)+'%;animation-delay:-'+(i*1.7)+'s;animation-duration:'+(12+i%4*3)+'s;font-size:'+(22+i%3*10)+'px">'+e+'</span>'}).join("");document.body.appendChild(b);document.body.dataset.tab="pl"})();
+
+/* ===== Улучшения профиля: аватар и достижения ===== */
+var AVS=["🙂","😎","🐱","🦊","🐼","🌟","🍀","🚀"];
+(function(){var a=$("av");if(!a)return;
+a.onclick=function(){var i=AVS.indexOf(a.textContent);a.textContent=AVS[(i+1)%AVS.length];a.classList.remove("pop");void a.offsetWidth;a.classList.add("pop");if(!S.prof)S.prof={};S.prof.av=a.textContent;save()}})();
+function drawA(){var done=S.tasks.filter(function(t){return t.x}).length,bs=0,ft=0;
+S.habits.forEach(function(h){var s=streak(h);if(s>bs)bs=s});
+Object.keys(S.focus).forEach(function(k){ft+=+S.focus[k]||0});
+var box=$("achs");if(box)box.innerHTML=[["✅",done,"задач закрыто"],["🔥",bs,"лучшая серия"],["🎯",ft,"фокус-сессий"]].map(function(x){return '<div class="ach"><b>'+x[1]+'</b><small>'+x[2]+'</small></div>'}).join("")}
+$("psv").onclick=function(){if(!S.prof)S.prof={};S.prof.n=$("pn").value.trim();S.prof.s=$("ps").value;S.prof.a=$("pa").value;S.prof.h=$("ph").value;S.prof.w=$("pw").value;S.prof.k=$("pk").value;S.prof.g=$("pg").value;save();loadP();var s=$("svd");s.textContent="Сохранено ✓";setTimeout(function(){s.textContent=""},2500)};
+function render(){drawT();drawW();drawH();drawD();drawS();drawF();drawA()}
+function loadP(){var p=S.prof;$("pn").value=p.n||"";$("ps").value=p.s||"m";$("pa").value=p.a||"";$("ph").value=p.h||"";$("pw").value=p.w||"";$("pk").value=p.k||"1.2";$("pg").value=p.g==null?"-400":p.g;
+$("pt").textContent=p.n?p.n:"Гость";
+$("avsub").textContent=p.n?"Личная цель: "+S.goal+" ккал в день":"Заполните данные — посчитаем норму калорий";
+if(S.prof.av){var a=$("av");if(a)a.textContent=S.prof.av}
+calcP()}
+render();loadP();
+/* ===== Вода, вес и недавние продукты ===== */
+S.water=S.water||{};S.weights=S.weights||[];S.rec=S.rec||[];
+var WGOAL=8;
+function drawWt(){var n=+S.water[TODAY]||0,g="";for(var i=0;i<WGOAL;i++)g+='<button class="wg'+(i<n?" on":"")+'" data-i="'+i+'" aria-label="Стакан '+(i+1)+'"></button>';
+var wt=$("wat");if(!wt)return;wt.innerHTML=g;$("wtx").textContent=n+" из "+WGOAL+" стаканов"}
+$("wat").onclick=function(e){var b=e.target.closest("[data-i]");if(!b)return;var i=+b.dataset.i,n=+S.water[TODAY]||0;S.water[TODAY]=(i<n)?i:i+1;save();drawWt();if(S.water[TODAY]>=WGOAL&&!drawWt.c){drawWt.c=1;burst(innerWidth/2,innerHeight/2,18)}if(S.water[TODAY]<WGOAL)drawWt.c=0};
+$("wadd").onclick=function(){var n=+S.water[TODAY]||0;if(n<WGOAL){S.water[TODAY]=n+1;save();drawWt()}};
+function drawWg(){var L=S.weights,h="";
+var box=$("whist");if(!box)return;
+box.innerHTML=L.length?L.slice(-7).reverse().map(function(x,i,a){var nx=i>0?a[i-1]:null,d=nx?" · "+(x.w>nx.w?"+":"")+(x.w-nx.w).toFixed(1):"";
+return '<div class="it"><span>'+pd(x.d).getDate()+" "+MON[pd(x.d).getMonth()]+'<small>'+x.w.toFixed(1)+' кг'+d+'</small></span><button class="rm" data-w="'+x.d+'" aria-label="Удалить">×</button></div>'}).join(""):'<p class="em">Запишите вес — увидите динамику.</p>';
+var last=L[L.length-1];$("wcur").textContent=last?last.w.toFixed(1)+" кг":"—";
+$("wchg").textContent=L.length>1?(last.w>=L[0].w?"+":"")+(last.w-L[0].w).toFixed(1)+" кг с первой записи":(L.length?"первая запись":"")}
+$("wgadd").onclick=function(){var v=+$("wgi").value;if(!(v>29&&v<301))return;S.weights=S.weights.filter(function(x){return x.d!==TODAY});S.weights.push({d:TODAY,w:v});S.weights.sort(function(a,b){return a.d<b.d?-1:1});$("wgi").value="";save();drawWg();var r=$("wgadd").getBoundingClientRect();burst(r.left,r.top,14)};
+$("whist").onclick=function(e){var d=e.target.closest("[data-w]");if(!d)return;S.weights=S.weights.filter(function(x){return x.d!==d.dataset.w});save();drawWg()};
+function drawRc(){var r=$("rc");if(!r)return;r.innerHTML=S.rec.length?S.rec.slice(0,6).map(function(x,i){return '<button class="chip" data-r="'+i+'">'+em(x.n)+" "+esc(x.n)+'</button>'}).join(""):""}
+$("rc").onclick=function(e){var b=e.target.closest("[data-r]");if(!b)return;var x=S.rec[+b.dataset.r];if(!x)return;$("dn").value=x.n;$("dk").value=x.k;$("dp").value=x.p;$("df").value=x.f;$("dc").value=x.c;if(x.m)$("dm").value=x.m};
+var _daAdd=$("da").onclick;
+$("da").onclick=function(){var n=$("dn").value.trim();if(!n||$("dk").value==="")return;S.rec=S.rec.filter(function(x){return x.n.toLowerCase()!==n.toLowerCase()});S.rec.unshift({n:n,k:+$("dk").value||0,p:+$("dp").value||0,f:+$("df").value||0,c:+$("dc").value||0,m:$("dm").value});S.rec=S.rec.slice(0,12);save();drawRc();_daAdd.call($("da"))};
+function render(){drawT();drawW();drawH();drawD();drawS();drawF();drawA();drawWt();drawWg();drawRc()}
+render();
