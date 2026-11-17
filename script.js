@@ -67,14 +67,12 @@ function calcP(){var p=S.prof,a=+p.a,h=+p.h,w=+p.w,r=$("pres");
 if(!(a>0&&h>0&&w>0)){r.innerHTML='<p>Заполните возраст, рост и вес.</p>';return}
 var bmr=10*w+6.25*h-5*a+(p.s==="f"?-161:5),tg=Math.max(1200,Math.round((bmr*(+p.k||1.2)+(+p.g||0))/10)*10),b=w/Math.pow(h/100,2),cat=b<18.5?"недостаточный вес":b<25?"нормальный вес":b<30?"избыточный вес":"ожирение";
 r.innerHTML='<div class="pm"><span>ИМТ</span><b>'+b.toFixed(1)+' · '+cat+'</b></div><div class="pm"><span>Рекомендуемая норма</span><b>'+tg+' ккал</b></div><button class="btn" style="margin-top:10px" data-t="'+tg+'">Применить как цель</button>'}
-function loadP(){var p=S.prof;$("pn").value=p.n||"";$("ps").value=p.s||"m";$("pa").value=p.a||"";$("ph").value=p.h||"";$("pw").value=p.w||"";$("pk").value=p.k||"1.2";$("pg").value=p.g==null?"-400":p.g;$("pt").textContent=p.n?"Привет, "+p.n+"!":"";calcP()}
-$("psv").onclick=function(){S.prof={n:$("pn").value.trim(),s:$("ps").value,a:$("pa").value,h:$("ph").value,w:$("pw").value,k:$("pk").value,g:$("pg").value};save();loadP()};
-$("pres").onclick=function(e){var t=e.target.dataset.t;if(!t)return;S.goal=+t;save();drawD();e.target.textContent="Цель обновлена ✓"};
-var rt;$("rst").onclick=function(){var b=$("rst");if(b.dataset.s){S={tasks:[],habits:[],focus:{},items:[],goal:2000,prof:{}};save();render();loadP();b.textContent="Очистить все данные";delete b.dataset.s;return}b.dataset.s=1;b.textContent="Нажмите ещё раз для подтверждения";clearTimeout(rt);rt=setTimeout(function(){b.textContent="Очистить все данные";delete b.dataset.s},4000)};
+$("psv").onclick=function(){if(!S.prof)S.prof={};S.prof.n=$("pn").value.trim();S.prof.s=$("ps").value;S.prof.a=$("pa").value;S.prof.h=$("ph").value;S.prof.w=$("pw").value;S.prof.k=$("pk").value;S.prof.g=$("pg").value;save();loadP();var s=$("svd");s.textContent="Сохранено ✓";setTimeout(function(){s.textContent=""},2500)};
+$("pres").onclick=function(e){var t=e.target.dataset.t;if(!t)return;S.goal=+t;save();drawD();loadP();e.target.textContent="Цель обновлена ✓"};
+var rt;$("rst").onclick=function(){var b=$("rst");if(b.dataset.s){S={tasks:[],habits:[],focus:{},items:[],goal:2000,prof:{},water:{},weights:[]};save();render();loadP();b.textContent="Очистить все данные";delete b.dataset.s;return}b.dataset.s=1;b.textContent="Нажмите ещё раз для подтверждения";clearTimeout(rt);rt=setTimeout(function(){b.textContent="Очистить все данные";delete b.dataset.s},4000)};
 document.querySelectorAll("[data-q]").forEach(function(b){b.onclick=function(){var r=b.getBoundingClientRect();burst(r.left+r.width/2,r.top);$("mg").textContent="Вы выбрали "+b.dataset.q+" подписку. Онлайн-оплата скоро будет подключена!"}});
 /* Навигация */
-function render(){drawT();drawW();drawH();drawD();drawS();drawF()}
-function sub(v,s){var e=$(v);e.querySelectorAll(".sg button").forEach(function(b){b.classList.toggle("on",b.dataset.s===s)});e.querySelectorAll(".sv").forEach(function(x){x.classList.toggle("on",x.id===s)});go("pl");render()}
+function sub(v,s){var e=$(v);e.querySelectorAll(".sg button").forEach(function(b){b.classList.toggle("on",b.dataset.s===s)});e.querySelectorAll(".sv").forEach(function(x){x.classList.toggle("on",x.id===s)});go(v.slice(2))}
 document.querySelectorAll(".sg").forEach(function(g){g.onclick=function(e){var b=e.target.closest("button");if(b){sub(g.parentNode.id,b.dataset.s);go(g.parentNode.id.slice(2))}}});
 function go(v){document.body.dataset.tab=v;document.querySelector(".bn").dataset.i=["pl","fd","pr"].indexOf(v);["pl","fd","pr"].forEach(function(k){$("v-"+k).classList.toggle("on",k===v)});document.querySelectorAll(".bn button").forEach(function(b){b.classList.toggle("on",b.dataset.v===v)});window.scrollTo(0,0);ent();render()}
 document.querySelector(".bn").onclick=function(e){var b=e.target.closest("button");if(b)go(b.dataset.v)};
@@ -106,7 +104,7 @@ s.animate([{transform:"translate(-50%,0) scale(1) rotate(0)",opacity:1},{transfo
 (function(){var E=["🍎","🥑","🥦","🍋","🍓","🥕","🍇","🥐","🍳","🥛"],b=document.createElement("div");b.className="fbg";b.setAttribute("aria-hidden","true");
 b.innerHTML=E.map(function(e,i){return '<span style="left:'+(i*10+3)+'%;animation-delay:-'+(i*1.7)+'s;animation-duration:'+(12+i%4*3)+'s;font-size:'+(22+i%3*10)+'px">'+e+'</span>'}).join("");document.body.appendChild(b);document.body.dataset.tab="pl"})();
 
-/* ===== Улучшения профиля: аватар и достижения ===== */
+/* ===== Профиль: аватар и достижения ===== */
 var AVS=["🙂","😎","🐱","🦊","🐼","🌟","🍀","🚀"];
 (function(){var a=$("av");if(!a)return;
 a.onclick=function(){var i=AVS.indexOf(a.textContent);a.textContent=AVS[(i+1)%AVS.length];a.classList.remove("pop");void a.offsetWidth;a.classList.add("pop");if(!S.prof)S.prof={};S.prof.av=a.textContent;save()}})();
@@ -114,32 +112,30 @@ function drawA(){var done=S.tasks.filter(function(t){return t.x}).length,bs=0,ft
 S.habits.forEach(function(h){var s=streak(h);if(s>bs)bs=s});
 Object.keys(S.focus).forEach(function(k){ft+=+S.focus[k]||0});
 var box=$("achs");if(box)box.innerHTML=[["✅",done,"задач закрыто"],["🔥",bs,"лучшая серия"],["🎯",ft,"фокус-сессий"]].map(function(x){return '<div class="ach"><b>'+x[1]+'</b><small>'+x[2]+'</small></div>'}).join("")}
-$("psv").onclick=function(){if(!S.prof)S.prof={};S.prof.n=$("pn").value.trim();S.prof.s=$("ps").value;S.prof.a=$("pa").value;S.prof.h=$("ph").value;S.prof.w=$("pw").value;S.prof.k=$("pk").value;S.prof.g=$("pg").value;save();loadP();var s=$("svd");s.textContent="Сохранено ✓";setTimeout(function(){s.textContent=""},2500)};
-function render(){drawT();drawW();drawH();drawD();drawS();drawF();drawA()}
 function loadP(){var p=S.prof;$("pn").value=p.n||"";$("ps").value=p.s||"m";$("pa").value=p.a||"";$("ph").value=p.h||"";$("pw").value=p.w||"";$("pk").value=p.k||"1.2";$("pg").value=p.g==null?"-400":p.g;
 $("pt").textContent=p.n?p.n:"Гость";
 $("avsub").textContent=p.n?"Личная цель: "+S.goal+" ккал в день":"Заполните данные — посчитаем норму калорий";
 if(S.prof.av){var a=$("av");if(a)a.textContent=S.prof.av}
 calcP()}
-render();loadP();
-/* ===== Вода, вес и недавние продукты ===== */
-S.water=S.water||{};S.weights=S.weights||[];S.rec=S.rec||[];
+
+/* ===== Вода и вес ===== */
+S.water=S.water||{};S.weights=S.weights||[];
 var WGOAL=8;
-function drawWt(){var n=+S.water[TODAY]||0,g="";for(var i=0;i<WGOAL;i++)g+='<button class="wg'+(i<n?" on":"")+'" data-i="'+i+'" aria-label="Стакан '+(i+1)+'"></button>';
-var wt=$("wat");if(!wt)return;wt.innerHTML=g;$("wtx").textContent=n+" из "+WGOAL+" стаканов"}
-$("wat").onclick=function(e){var b=e.target.closest("[data-i]");if(!b)return;var i=+b.dataset.i,n=+S.water[TODAY]||0;S.water[TODAY]=(i<n)?i:i+1;save();drawWt();if(S.water[TODAY]>=WGOAL&&!drawWt.c){drawWt.c=1;burst(innerWidth/2,innerHeight/2,18)}if(S.water[TODAY]<WGOAL)drawWt.c=0};
+function drawWt(){var n=+S.water[TODAY]||0,g="",wt=$("wat");if(!wt)return;
+for(var i=0;i<WGOAL;i++)g+='<button type="button" class="wg'+(i<n?" on":"")+'" data-i="'+i+'" aria-label="Стакан '+(i+1)+'"></button>';
+wt.innerHTML=g;
+var bs=wt.querySelectorAll(".wg");
+for(var j=0;j<bs.length;j++)(function(k){bs[k].onclick=function(){var n2=+S.water[TODAY]||0;S.water[TODAY]=(k<n2)?k:k+1;save();drawWt();if(S.water[TODAY]>=WGOAL&&!drawWt.c){drawWt.c=1;burst(innerWidth/2,innerHeight/2,18)}if(S.water[TODAY]<WGOAL)drawWt.c=0}})(j);
+$("wtx").textContent=n+" из "+WGOAL+" стаканов"}
 $("wadd").onclick=function(){var n=+S.water[TODAY]||0;if(n<WGOAL){S.water[TODAY]=n+1;save();drawWt()}};
-function drawWg(){var L=S.weights,h="";
-var box=$("whist");if(!box)return;
+function drawWg(){var L=S.weights,box=$("whist");if(!box)return;
 box.innerHTML=L.length?L.slice(-7).reverse().map(function(x,i,a){var nx=i>0?a[i-1]:null,d=nx?" · "+(x.w>nx.w?"+":"")+(x.w-nx.w).toFixed(1):"";
 return '<div class="it"><span>'+pd(x.d).getDate()+" "+MON[pd(x.d).getMonth()]+'<small>'+x.w.toFixed(1)+' кг'+d+'</small></span><button class="rm" data-w="'+x.d+'" aria-label="Удалить">×</button></div>'}).join(""):'<p class="em">Запишите вес — увидите динамику.</p>';
 var last=L[L.length-1];$("wcur").textContent=last?last.w.toFixed(1)+" кг":"—";
 $("wchg").textContent=L.length>1?(last.w>=L[0].w?"+":"")+(last.w-L[0].w).toFixed(1)+" кг с первой записи":(L.length?"первая запись":"")}
 $("wgadd").onclick=function(){var v=+$("wgi").value;if(!(v>29&&v<301))return;S.weights=S.weights.filter(function(x){return x.d!==TODAY});S.weights.push({d:TODAY,w:v});S.weights.sort(function(a,b){return a.d<b.d?-1:1});$("wgi").value="";save();drawWg();var r=$("wgadd").getBoundingClientRect();burst(r.left,r.top,14)};
 $("whist").onclick=function(e){var d=e.target.closest("[data-w]");if(!d)return;S.weights=S.weights.filter(function(x){return x.d!==d.dataset.w});save();drawWg()};
-function drawRc(){var r=$("rc");if(!r)return;r.innerHTML=S.rec.length?S.rec.slice(0,6).map(function(x,i){return '<button class="chip" data-r="'+i+'">'+em(x.n)+" "+esc(x.n)+'</button>'}).join(""):""}
-$("rc").onclick=function(e){var b=e.target.closest("[data-r]");if(!b)return;var x=S.rec[+b.dataset.r];if(!x)return;$("dn").value=x.n;$("dk").value=x.k;$("dp").value=x.p;$("df").value=x.f;$("dc").value=x.c;if(x.m)$("dm").value=x.m};
-var _daAdd=$("da").onclick;
-$("da").onclick=function(){var n=$("dn").value.trim();if(!n||$("dk").value==="")return;S.rec=S.rec.filter(function(x){return x.n.toLowerCase()!==n.toLowerCase()});S.rec.unshift({n:n,k:+$("dk").value||0,p:+$("dp").value||0,f:+$("df").value||0,c:+$("dc").value||0,m:$("dm").value});S.rec=S.rec.slice(0,12);save();drawRc();_daAdd.call($("da"))};
-function render(){drawT();drawW();drawH();drawD();drawS();drawF();drawA();drawWt();drawWg();drawRc()}
-render();
+
+/* ===== Запуск ===== */
+function render(){drawT();drawW();drawH();drawD();drawS();drawF();drawA();drawWt();drawWg()}
+render();loadP();

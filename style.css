@@ -1123,7 +1123,8 @@ body{padding-bottom:120px}
 .cmp .yes{color:var(--ac);font-weight:700}
 .cmp .no{color:var(--mu)}
 .cmp tr:last-child td{border-bottom:0}
-/* ===== Вода, вес и недавние продукты ===== */
+
+/* ===== Вода ===== */
 .wl{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:4px}
 .wg{aspect-ratio:2/3;min-height:34px;border:2px solid var(--ac2);border-radius:6px 6px 12px 12px;background:var(--ac2);cursor:pointer;transition:background .2s,border-color .2s,transform .15s;padding:0}
 .wg.on{background:var(--b);border-color:var(--b)}
